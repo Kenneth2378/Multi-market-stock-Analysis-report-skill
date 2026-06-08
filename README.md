@@ -21,6 +21,9 @@ Copy this folder into your Codex skills directory:
 
 Then restart Codex.
 
+Skill Name
+Use this name when calling the skill in Codex:a-share-stock-report
+
 ## Example Prompts
 
 ```text
