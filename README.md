@@ -7,6 +7,21 @@ A Codex Skill for generating PDF stock research reports across A-shares, B-share
 If this skill is useful, please consider giving it a Star.
 如果这个 Skill 对你有帮助，欢迎点一个 Star 支持。
 
+## Example Reports
+- A-share example: 中际旭创
+- US stock example: NVIDIA
+- Stable income example: 京沪高铁
+
+## What This Skill Generates
+- PDF stock research report
+- Recent 3-month chart
+- Fundamentals
+- Valuation
+- Technical analysis
+- Capital-flow signals
+- Investment judgment framework
+- Risk disclaimer
+
 ## Features
 
 - Resolve stock names, codes, markets, and trading currencies.
