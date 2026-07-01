@@ -33,6 +33,7 @@ This public version supports:
 - Research judgment and methodology.
 - Observation conditions, invalidation conditions, and risk warnings.
 - Numeric validation gate.
+- Public depth-standard gate.
 - `quality_check.md`.
 - Data-source citation, copyright boundary, disclaimer, and private-information protection.
 
@@ -69,6 +70,7 @@ Required public files:
 - `scripts/generate_stock_report.py`
 - `scripts/validate_report.py`
 - `scripts/scan_pdf_privacy.py`
+- `scripts/check_report_depth_standard.py`
 - `scripts/collect_eastmoney_evidence.py`
 - `scripts/init_research_pack.py`
 
@@ -77,9 +79,14 @@ Usage:
 ```text
 python scripts/generate_stock_report.py --input research_pack.json --validate-only
 python scripts/generate_stock_report.py --input research_pack.json --output-dir reports
+python scripts/check_report_depth_standard.py reports/<report.pdf>
 ```
 
 The generator rejects incomplete research packs. The final validator requires the legacy content contract, at least 3537 extracted PDF characters, target-specific semantic checks, all numeric validation rows to pass, no privacy hits, the latest complete trading day, and no forced page break or sparse non-final page.
+
+`quality_check.md` passing is necessary but not sufficient. The final PDF must also pass `scripts/check_report_depth_standard.py`, which blocks shallow reports with low page count, low character count, weak numeric density, missing valuation/fundamental/judgment terms, privacy problems, mojibake, or forbidden transaction language.
+
+The initialized research pack from `init_research_pack.py` is only a draft. It intentionally contains pending verification and must be deepened with company-specific financials, valuation basis, peer context, price-volume evidence, catalysts, observation conditions, invalidation conditions, and numeric validation before delivery.
 
 ## Features
 
@@ -194,13 +201,14 @@ Then run the deterministic gates:
 ```text
 python scripts/generate_stock_report.py --input workspace/600845_research_pack.json --validate-only
 python scripts/generate_stock_report.py --input workspace/600845_research_pack.json --output-dir workspace/reports
+python scripts/check_report_depth_standard.py workspace/reports/<report.pdf>
 ```
 
 The collector is an evidence aid, not an investment-analysis engine. Hong Kong and US securities require the public alternatives listed in `SKILL.md`.
 
 ## Reproducibility Boundary
 
-The repository fixes the report contract, renderer, numeric trail, semantic checks, privacy scan, and PASS threshold. Live prices, newly published filings, source availability, and model-written analysis can change, so different runs should meet the same validation standard but are not expected to produce identical wording or conclusions.
+The repository fixes the report contract, renderer, numeric trail, semantic checks, privacy scan, public depth-standard gate, and PASS threshold. Live prices, newly published filings, source availability, and model-written analysis can change, so different runs should meet the same validation standard but are not expected to produce identical wording or conclusions.
 
 ## Example Prompts
 

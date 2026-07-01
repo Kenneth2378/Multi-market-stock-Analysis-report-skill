@@ -18,13 +18,30 @@ python scripts/generate_stock_report.py --input research_pack.json --validate-on
 python scripts/generate_stock_report.py --input research_pack.json --output-dir <reports>
 python scripts/validate_report.py <report.pdf> --pack research_pack.json --html <report.html>
 python scripts/scan_pdf_privacy.py <report.pdf>
+python scripts/check_report_depth_standard.py <report.pdf>
 ```
 
-Do not write a one-off renderer when these scripts are available. Do not report success unless the generated sibling `quality_check.md` ends in `PASS`.
+Do not write a one-off renderer when these scripts are available. Do not report success unless the generated sibling `quality_check.md` ends in `PASS` and `scripts/check_report_depth_standard.py` returns `PASS`.
 
 For A-shares and B-shares, use the bundled collector as the initial public-evidence snapshot when the endpoint is available. Inspect `source_errors` before research and replace missing evidence with statutory filings or another named public source. Treat the initialized pack as a draft only: it intentionally contains `数据待核验`, an empty numeric-validation list, and non-empty `pending_verification`. Complete company-specific research and numeric validation before running `--validate-only`. For Hong Kong and US stocks, gather equivalent evidence from the public alternatives below and construct the same schema manually.
 
-Default behavior is a deep PDF research report plus a sibling `quality_check.md`. The public deterministic renderer and validators are included under `scripts/`.
+Default behavior is a deep PDF research report plus a sibling `quality_check.md`. The public deterministic renderer and validators are included under `scripts/`. `quality_check.md PASS` is necessary but not sufficient: the final PDF must also pass the public depth-standard gate.
+
+## Public depth-standard gate
+
+Run `scripts/check_report_depth_standard.py` on every final PDF. This gate prevents shallow reports that pass only by headings or file existence.
+
+Minimum public thresholds:
+
+- At least 3 PDF pages.
+- At least 3500 extracted PDF characters.
+- At least 400 digits.
+- At least 15 percentage values.
+- At least 45 finance or money terms.
+- Must contain fundamentals, valuation, research judgment/methodology, operating cash flow, gross margin, net profit, PE, observation conditions, invalidation conditions, and the investment-advice disclaimer.
+- Must not contain direct transaction commands or guaranteed-return language.
+
+If the public depth-standard gate returns `NEEDS_REVIEW`, do not tell the user that the report is complete. Add company-specific evidence, numbers, valuation basis, observation conditions, and invalidation conditions, then regenerate.
 
 ## Required stance
 
@@ -295,4 +312,5 @@ Before final response:
 - Confirm the report does not expose personal paths, account names, credentials, screenshots, API keys, cookies, tokens, or private files.
 - Confirm data sources are cited by name or link, and source content is summarized rather than copied at length.
 - If `quality_check.md` is not `PASS`, tell the user what must be reviewed.
+- If `scripts/check_report_depth_standard.py` is not `PASS`, tell the user that the report is too shallow and must be deepened before delivery.
 - Keep the final response short and link generated PDF files.
